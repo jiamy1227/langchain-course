@@ -20,11 +20,15 @@ llm = ChatOpenAI(
     max_retries=2,
 )
 
+async def batch_async():
+    questions = [
+        "什么是LangChain？",
+        "LangChain的核心组件有哪些？",
+        "如何使用LangChain构建Agent？"
+    ]
+    responses = await llm.abatch(questions)
+    for q, r in zip(questions, responses):
+        print(f"Q: {q}\nA: {r.content}\n")
 
-# async def call_llm_async():
-#     response = await llm.ainvoke("什么是LangChain？")
-#     print(response.content)
-
-# # Jupyter Notebook 中直接 await（见下方说明）
-# asyncio.run(call_llm_async()) # 方式二  
-print(llm.invoke("一句话介绍自己？").content)
+if __name__ == "__main__":
+    asyncio.run(batch_async())

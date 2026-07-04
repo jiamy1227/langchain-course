@@ -27,4 +27,21 @@ llm = ChatOpenAI(
 
 # # Jupyter Notebook 中直接 await（见下方说明）
 # asyncio.run(call_llm_async()) # 方式二  
-print(llm.invoke("一句话介绍自己？").content)
+#for chunk in llm.stream("什么是LangChain？"):
+    # 累积消息块
+    # full_message = chunk if full_message is None else full_message + chunk
+    #print(chunk.content, end="", flush=True)
+
+# 流式event
+async def stream_events():
+    async for event in llm.astream_events("你好"):
+        if event["event"] == "on_chat_model_start":
+            print(f"输入: {event['data']['input']}")
+        elif event["event"] == "on_chat_model_stream":
+            print(f"Token: {event['data']['chunk'].content}", end="",flush=True)
+        elif event["event"] == "on_chat_model_end":
+            print(f"\n做一些完成后的处理!")
+
+if __name__ == "__main__":
+    asyncio.run(stream_events())
+    
