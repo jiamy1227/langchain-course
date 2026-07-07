@@ -1,0 +1,22 @@
+from langchain_core.prompts import PromptTemplate
+
+prompt1 = PromptTemplate.from_template("讲一个关于{topic}的{adjective}故事")
+
+prompt2 = PromptTemplate(
+    input_variables=["topic", "adjective"],
+    template="讲一个关于{topic}的{adjective}故事"
+);
+
+#使用 format：仅在你仅仅想快速看一眼格式化后的字符串结果，或者在不使用 LangChain 链的传统 Python 代码逻辑中临时使用时，才使用它。
+format_prompt1 = prompt1.format(topic="猫", adjective="有趣")
+format_prompt2 = prompt2.format(topic="狗", adjective="感人")
+print(format_prompt1)  # 输出: 讲一个关于猫的有趣故事
+print(format_prompt2)  # 输出: 讲一个关于狗的感人故事
+
+
+#使用 invoke : 如果你正在构建一个完整的 LangChain 应用程序，或者通过 | 将 Prompt 传递给 LLM，
+#请始终使用 invoke。这是现代 LangChain 的推荐做法。
+format_prompt3 = prompt1.invoke({"topic": "猫", "adjective": "有趣"})
+format_prompt4 = prompt2.invoke({"topic": "狗", "adjective": "感人"})
+print(format_prompt3)  # 输出: 讲一个关于猫的有趣故事
+print(format_prompt4)  # 输出: 讲一个关于狗的感人故事
