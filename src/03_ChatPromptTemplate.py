@@ -1,5 +1,26 @@
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+import os
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import (
+    HumanMessage,SystemMessage,AIMessage
+)
+import asyncio
+
+
+load_dotenv()
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+DEEPSEEK_API_BASE = os.getenv("DEEPSEEK_API_BASE")
+
+# 如果没有设置环境变量，也可以通过 api_key 参数显式传入
+llm = ChatOpenAI(
+    model="deepseek-v4-flash",
+    api_key=DEEPSEEK_API_KEY,
+    base_url=DEEPSEEK_API_BASE,
+    temperature=0.5,
+    max_retries=2,
+)
 
 
 chat_prompt1 = ChatPromptTemplate.from_messages([
@@ -26,4 +47,9 @@ chat_prompt2 = ChatPromptTemplate.from_messages([
 ])
 
 messages2 = chat_prompt2.invoke({"topic": "LangChain"})
-print(messages2)
+
+
+# print(llm.invoke(messages2))
+
+for chunk in llm.stream(messages2):
+    print(chunk.content, end="", flush=True)

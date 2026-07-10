@@ -1,0 +1,4 @@
+from langchain_core.output_parsers import StrOutputParser
+
+parser = StrOutputParser()
+# 通常在LCEL链中使用：chain = prompt | llm | StrOutputParser()
